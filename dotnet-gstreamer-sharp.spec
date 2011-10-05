@@ -3,15 +3,19 @@ Summary:	.NET bindings for GStreamer
 Summary(pl.UTF-8):	Wiązania GStreamera dla .NET
 Name:		dotnet-gstreamer-sharp
 Version:	0.9.2
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://gstreamer.freedesktop.org/src/gstreamer-sharp/gstreamer-sharp-%{version}.tar.bz2
 # Source0-md5:	767bdba4dd753ba766352360c7053c14
+Patch0:		%{name}-destdir.patch
 URL:		http://gstreamer.org/
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	glib2-devel >= 1:2.18.1
 BuildRequires:	gstreamer-devel >= 0.10.25
 BuildRequires:	gstreamer-plugins-base-devel >= 0.10.25
+BuildRequires:	libtool
 BuildRequires:	mono-csharp >= 2.4
 BuildRequires:	monodoc >= 1.1
 BuildRequires:	pkgconfig
@@ -57,8 +61,13 @@ Biblioteka statyczna gstreamer-sharp.
 
 %prep
 %setup -q -n gstreamer-sharp-%{version}
+%patch0 -p1
 
 %build
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__automake}
 %configure
 %{__make}
 
