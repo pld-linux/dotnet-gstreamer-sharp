@@ -1,38 +1,39 @@
 %include	/usr/lib/rpm/macros.mono
-Summary:	.NET bindings for GStreamer
-Summary(pl.UTF-8):	Wiązania GStreamera dla .NET
+Summary:	.NET bindings for GStreamer 1.0
+Summary(pl.UTF-8):	Wiązania GStreamera 1.0 dla .NET
 Name:		dotnet-gstreamer-sharp
-Version:	0.9.2
-Release:	2
-License:	LGPL v2+
+Version:	0.99.0
+Release:	1
+License:	AGPL v3+
 Group:		Libraries
-Source0:	http://gstreamer.freedesktop.org/src/gstreamer-sharp/gstreamer-sharp-%{version}.tar.bz2
-# Source0-md5:	767bdba4dd753ba766352360c7053c14
-Patch0:		%{name}-destdir.patch
+Source0:	http://gstreamer.freedesktop.org/src/gstreamer-sharp/gstreamer-sharp-%{version}.tar.gz
+# Source0-md5:	467cdfdb75e0ad568c2d7bc5c47e0c25
 URL:		http://gstreamer.org/
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
+BuildRequires:	dotnet-gtk-sharp3-devel >= 2.99.2
 BuildRequires:	glib2-devel >= 1:2.18.1
-BuildRequires:	gstreamer-devel >= 0.10.25
-BuildRequires:	gstreamer-plugins-base-devel >= 0.10.25
-BuildRequires:	libtool
+BuildRequires:	gstreamer-devel >= 1.0
+BuildRequires:	gstreamer-plugins-base-devel >= 1.0
+BuildRequires:	libtool >= 2:2
 BuildRequires:	mono-csharp >= 2.4
 BuildRequires:	monodoc >= 1.1
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(monoautodeps)
+Requires:	dotnet-gtk-sharp3 >= 2.99.2
 Requires:	glib2 >= 1:2.18.1
-Requires:	gstreamer >= 0.10.25
-Requires:	gstreamer-plugins-base >= 0.10.25
+Requires:	gstreamer >= 1.0
+Requires:	gstreamer-plugins-base >= 1.0
 Requires:	mono >= 2.4
 ExclusiveArch:	%{ix86} %{x8664} arm hppa ia64 ppc s390 s390x sparc sparcv9 sparc64
 ExcludeArch:	i386
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-This package provides bindings for .NET to GStreamer libraries.
+This package provides bindings for .NET to GStreamer 1.0 libraries.
 
 %description -l pl.UTF-8
-Pakiet ten dostarcza wiązania dla .NET do bibliotek GStreamera.
+Pakiet ten dostarcza wiązania dla .NET do bibliotek GStreamera 1.0.
 
 %package devel
 Summary:	Development files for GStreamer-sharp library
@@ -60,8 +61,7 @@ Static gstreamer-sharp library.
 Biblioteka statyczna gstreamer-sharp.
 
 %prep
-%setup -q -n gstreamer-sharp-%{version}
-%patch0 -p1
+%setup -q -c
 
 %build
 %{__libtoolize}
@@ -77,6 +77,8 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libgstreamersharpglue-1.0.0.la
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -85,20 +87,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README RELEASE TODO
-%attr(755,root,root) %{_libdir}/libgstreamersharpglue-0.10.so
-# needed for DllImport on basename
-%{_libdir}/libgstreamersharpglue-0.10.la
+%doc LICENSE NEWS README.md
+%attr(755,root,root) %{_libdir}/libgstreamersharpglue-1.0.0.so
 %{_prefix}/lib/mono/gac/gstreamer-sharp
 
 %files devel
 %defattr(644,root,root,755)
-%dir %{_prefix}/lib/mono/gstreamer-sharp-0.10
-%{_prefix}/lib/mono/gstreamer-sharp-0.10/gstreamer-sharp.dll
+%dir %{_prefix}/lib/mono/gstreamer-sharp
+%{_prefix}/lib/mono/gstreamer-sharp/gstreamer-sharp.dll
 %{_prefix}/lib/monodoc/sources/gstreamer-sharp-docs.*
-%{_datadir}/gapi/gstreamer-api.xml
-%{_pkgconfigdir}/gstreamer-sharp-0.10.pc
+%{_pkgconfigdir}/gstreamer-sharp-1.0.pc
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libgstreamersharpglue-0.10.a
+%{_libdir}/libgstreamersharpglue-1.0.0.a
