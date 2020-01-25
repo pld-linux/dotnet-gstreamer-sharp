@@ -1,4 +1,3 @@
-%include	/usr/lib/rpm/macros.mono
 Summary:	.NET bindings for GStreamer 1.0
 Summary(pl.UTF-8):	Wiązania GStreamera 1.0 dla .NET
 Name:		dotnet-gstreamer-sharp
