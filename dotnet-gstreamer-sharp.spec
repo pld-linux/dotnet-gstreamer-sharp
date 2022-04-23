@@ -2,7 +2,7 @@ Summary:	.NET bindings for GStreamer 1.0
 Summary(pl.UTF-8):	Wiązania GStreamera 1.0 dla .NET
 Name:		dotnet-gstreamer-sharp
 Version:	0.99.0
-Release:	1
+Release:	2
 License:	AGPL v3+
 Group:		Libraries
 Source0:	http://gstreamer.freedesktop.org/src/gstreamer-sharp/gstreamer-sharp-%{version}.tar.gz
