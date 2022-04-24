@@ -1,0 +1,101 @@
+--- gstreamer-sharp-1.20.1/meson.build.orig	2022-03-14 12:33:40.000000000 +0100
++++ gstreamer-sharp-1.20.1/meson.build	2022-04-23 18:54:29.496085263 +0200
+@@ -18,34 +18,23 @@ if csc.get_id() == 'mono'
+ endif
+ 
+ 
+-subproject('gtk-sharp', default_options: ['install=false'])
+-gtk_sharp = subproject('gtk-sharp')
++has_gtk = true
++gtk_sharp_dep = dependency('gtk-sharp-3.0', version: gtk_sharp_required_version,
++      fallback: ['gtk_sharp', 'gtk_sharp_dep'])
+ 
+-glib_sharp_dep = gtk_sharp.get_variable('glib_sharp_dep')
+-glib_sharp = gtk_sharp.get_variable('glib_sharp')
++glib_sharp_dep = dependency('glib-sharp-3.0', version: gtk_sharp_required_version,
++      fallback: ['gtk_sharp', 'glib_sharp_dep'])
+ 
+-gio_sharp_dep = gtk_sharp.get_variable('gio_sharp_dep')
+-gio_sharp = gtk_sharp.get_variable('gio_sharp')
++gio_sharp_dep = dependency('gio-sharp-3.0', version: gtk_sharp_required_version,
++      fallback: ['gtk_sharp', 'gio_sharp_dep'])
+ 
+-gapi_fixup = gtk_sharp.get_variable('gapi_fixup')
+-gapi_codegen = gtk_sharp.get_variable('gapi_codegen')
+-
+-glib_api_includes = gtk_sharp.get_variable('glib_api_includes')
+-gio_api_includes = gtk_sharp.get_variable('gio_api_includes')
+-has_gtk = gtk_sharp.get_variable('has_gtk')
+-if has_gtk
+-  gtk_sharp_dep = [gtk_sharp.get_variable('gtk_sharp_dep'),
+-    gtk_sharp.get_variable('atk_sharp_dep')]
+-else
+-  gtk_sharp_dep = dependency('gtk-sharp-3.0', version: gtk_sharp_required_version,
+-      required: false)
+-endif
++gapi_fixup = find_program('gapi3-fixup')
++gapi_codegen = find_program('gapi3-codegen')
+ 
+-mono_path = [gtk_sharp.get_variable('mono_path'), join_paths(meson.current_build_dir(), 'sources')]
++glib_api_includes = glib_sharp_dep.get_variable('gapidir') / 'glib-api.xml'
++gio_api_includes = gio_sharp_dep.get_variable('gapidir') / 'gio-api.xml'
+ 
+-codegen_dependencies = [gapi_codegen, gapi_fixup, glib_sharp, gio_sharp]
+-gapi_fixup = gapi_fixup.full_path()
+-gapi_codegen = gapi_codegen.full_path()
++mono_path = [gtk_sharp_dep.get_variable('libdir') / 'mono', join_paths(meson.current_build_dir(), 'sources')]
+ 
+ gacutil = find_program('gacutil')
+ generate_api = find_program('generate_code.py')
+@@ -124,43 +113,13 @@ testsenv.prepend('LD_LIBRARY_PATH', test
+ subdir('sources')
+ if ges_dep.found()
+   subdir('ges')
+-  custom_target('GESSharp-nuget',
+-      command: [nuget, '--package-name', 'GESSharp',
+-          '--assembly', ges_sharp.full_path(),
+-          '--dependency=GstSharp:' + meson.project_version(),
+-          '--project-url', 'https://gstreamer.freedesktop.org/modules/gstreamer-sharp.html',
+-          '--icon-url', 'https://gstreamer.freedesktop.org/images/header-logo-top.png',
+-          '--license-url', 'https://cgit.freedesktop.org/gstreamer/gstreamer-sharp/plain/COPYING',
+-          '--version', meson.project_version(),
+-          '--tags', 'GStreamer GES GstSharp bindings',
+-          '--builddir', meson.current_build_dir(),
+-          '--dependency', 'GstSharp:' + meson.project_version(),
+-      ],
+-      output: 'GESSharp.' + meson.project_version() + '.nupkg'
+-  )
+ endif
+ 
+-custom_target('GstSharp-nuget',
+-    command: [nuget, '--package-name', 'GstSharp',
+-        '--assembly', gst_sharp.full_path(),
+-        '--assembly', gio_sharp.full_path(),
+-        '--assembly', glib_sharp.full_path(),
+-        '--project-url', 'https://gstreamer.freedesktop.org/modules/gstreamer-sharp.html',
+-        '--icon-url', 'https://gstreamer.freedesktop.org/images/header-logo-top.png',
+-        '--license-url', 'https://cgit.freedesktop.org/gstreamer/gstreamer-sharp/plain/COPYING',
+-        '--version', meson.project_version(),
+-        '--tags', 'GStreamer GstSharp bindings',
+-        '--builddir', meson.current_build_dir(),
+-    ],
+-    output: 'GstSharp.' + meson.project_version() + '.nupkg',
+-)
+ 
+ subdir('samples')
+ subdir('Tests')
+ 
+-bindinator = subproject('bindinator', default_options: ['gapi_fixup=@0@'.format(gapi_fixup)])
+-if bindinator.get_variable('found')
+-    bindinate = bindinator.get_variable('bindinate')
++    bindinate = find_program('bindinate')
+     run_target('bindinate_gstreamer',
+         command: [bindinate,
+             '--name=gstreamer', '--regenerate=true',
+@@ -180,6 +139,3 @@ if bindinator.get_variable('found')
+     python3 = import('python3').find_python()
+     run_target('update-code', command: [find_program('update_sources.py')])
+     run_target('update-all', command: [find_program('update_sources.py'), 'bindinate'])
+-else
+-    warning('Bindinator not usable as some required dependencies are not avalaible.')
+-endif
