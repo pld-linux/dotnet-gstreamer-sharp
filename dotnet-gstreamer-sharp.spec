@@ -1,12 +1,12 @@
 Summary:	.NET bindings for GStreamer 1.0
 Summary(pl.UTF-8):	Wiązania GStreamera 1.0 dla .NET
 Name:		dotnet-gstreamer-sharp
-Version:	1.20.1
+Version:	1.22.2
 Release:	0.1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://gstreamer.freedesktop.org/src/gstreamer-sharp/gstreamer-sharp-%{version}.tar.xz
-# Source0-md5:	4d18fa3a9bba4266db8a3db0869c885a
+# Source0-md5:	9c655b568072d1d2901958a1889ea13b
 Source1:	https://github.com/GLibSharp/GtkSharp/archive/4c85f1479cf2e0dc056c0d288785e5a1d7251cb1/GtkSharp-4c85f1479cf2e0dc056c0d288785e5a1d7251cb1.tar.gz
 # Source1-md5:	0917a7cba40ceaf9ec8b4e187df24f03
 Source2:	https://github.com/GLibSharp/bindinator/archive/c29b965e5ee4a9bd7fcf6b8f4d78dba6c9cbe6ac/bindinator-c29b965e5ee4a9bd7fcf6b8f4d78dba6c9cbe6ac.tar.gz
