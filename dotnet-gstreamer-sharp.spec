@@ -1,14 +1,14 @@
 Summary:	.NET bindings for GStreamer 1.0
 Summary(pl.UTF-8):	Wiązania GStreamera 1.0 dla .NET
 Name:		dotnet-gstreamer-sharp
-Version:	1.22.2
+Version:	1.24.0
 Release:	0.1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://gstreamer.freedesktop.org/src/gstreamer-sharp/gstreamer-sharp-%{version}.tar.xz
-# Source0-md5:	9c655b568072d1d2901958a1889ea13b
-Source1:	https://github.com/GLibSharp/GtkSharp/archive/4c85f1479cf2e0dc056c0d288785e5a1d7251cb1/GtkSharp-4c85f1479cf2e0dc056c0d288785e5a1d7251cb1.tar.gz
-# Source1-md5:	0917a7cba40ceaf9ec8b4e187df24f03
+# Source0-md5:	b8b28bab10cd288eedbf3937c6aa1671
+Source1:	https://github.com/GLibSharp/GtkSharp/archive/786f531be6c2285c8fe5d00163a4aa28e912f528/GtkSharp-786f531be6c2285c8fe5d00163a4aa28e912f528.tar.gz
+# Source1-md5:	0fc81ecc4011ebd2bdc5c380a7702fb0
 Source2:	https://github.com/GLibSharp/bindinator/archive/c29b965e5ee4a9bd7fcf6b8f4d78dba6c9cbe6ac/bindinator-c29b965e5ee4a9bd7fcf6b8f4d78dba6c9cbe6ac.tar.gz
 # Source2-md5:	940e8b3f838000e7b428f01a7e47dec0
 Patch0:		gstreamer-sharp-system-gtk-sharp3.patch
@@ -18,7 +18,7 @@ BuildRequires:	glib2-devel >= 1:2.18.1
 BuildRequires:	gstreamer-devel >= 1.0
 BuildRequires:	gstreamer-plugins-base-devel >= 1.0
 BuildRequires:	meson >= 0.59
-BuildRequires:	mono-csharp >= 2.4
+BuildRequires:	mono-csharp >= 5.0
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.745
@@ -28,7 +28,7 @@ Requires:	dotnet-gtk-sharp3 >= 3.22.6
 Requires:	glib2 >= 1:2.18.1
 Requires:	gstreamer >= 1.0
 Requires:	gstreamer-plugins-base >= 1.0
-Requires:	mono >= 2.4
+Requires:	mono >= 5.0
 ExclusiveArch:	%{ix86} %{x8664} %{arm} hppa ia64 ppc s390 s390x sparc sparcv9 sparc64
 ExcludeArch:	i386
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -53,12 +53,11 @@ Development files for GStreamer-sharp library.
 Pliki programistyczne biblioteki GStreamer-sharp.
 
 %prep
-%setup -q -n gstreamer-sharp-%{version} -a1 -a2
+%setup -q -n gstreamer-sharp-%{version} -a1
 # currently not possible: relies on extensions from GLibSharp fork, openmedicus is not sufficient
 #patch0 -p1
 
 %{__mv} GtkSharp-* subprojects/gtk-sharp
-%{__mv} bindinator-* subprojects/bindinator
 
 %build
 %meson build
